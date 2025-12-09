@@ -8,651 +8,513 @@
 
 %\documentclass[submit,techrep]{ipsj}
 \documentclass[submit,techrep,noauthor]{ipsj}
-\usepackage[dvips]{graphicx}
+\usepackage[dvipdfmx]{graphicx}
 \usepackage{latexsym}
 \usepackage{cite}
+\usepackage[hyphens]{url}
+\usepackage[dvipdfmx,hidelinks]{hyperref}
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
 \def\|{\verb|}
 %
-
 %\setcounter{巻数}{59}%vol59=2018
 %\setcounter{号数}{10}
 %\setcounter{page}{1}
 
 
 \begin{document}
-\title{第三者に移転する仮名化データのGDPR下での位置づけ}
+\title{情報処理学会 電子化知的財産・社会基盤研究会\\研究報告用テンプレート}
 
-\etitle{Legal status of pseudonymised data transferred\\ to third parties under the GDPR}
+\etitle{Template for Tech Report for Electronic Intellectual Property Research Group,
+Information Processing Association of Japan}
 
-\affiliate{hakuhodo}{株式会社博報堂DYホールディングス, Hakuhodo DY Holdings Inc    }
 \affiliate{jilis}{一般財団法人情報法制研究所, Japan Institute of Law and Information Systems}
 
-\author{猪谷 誠一}{Seiichi IGAYA}{hakuhodo, jilis}[oasis\_adhim@proton.me]
+\author{猪谷 誠一}{Seiichi IGAYA}{jilis}[oasis\_adhim@proton.me]
 
 \begin{abstract}
-2025年9月4日、欧州司法裁判所は\textit{EDPS} v \textit{Single Resolution Board}事件に
-関して一般裁判所が下した先決裁定を破棄し差し戻す判決を下した。
-この事件では単一破綻処理委員会(Single Resolution Board; SRB)はBanco Popularの
-破綻処理中、債権者や株主が不利益を被らないか検証するためヒアリング等を行い、
-それらの情報を仮名化して独立評価者であるDeloitteに提供した。
-この提供の事実をデータ主体に開示しなかったことについてEDPSが
-GDPR第15条1項(d)の透明性義務違反を認定、
-是正を命じたところ、EDPSの決定の無効をSRBが訴えたものである。
-一般裁判所はEDPS決定を無効とする先決裁定を下した。
-それを破棄した欧州司法裁判所の判決では、本人の識別可能性をいつ、誰の観点で判断すべきかを
-明らかにしている。本発表ではその内容を検討する。
+このテンプレートは情報処理学会が公開している研究報告用LaTeXテンプレートを
+Zoteroでの文献管理を前提に、電子化知的財産・社会基盤(EIP)研究会用に拡張したものです。
+和文誌、日米欧の法律、日欧の判決等の引用をサポートする拡張を行いました。
 \end{abstract}
 
 \begin{eabstract}
 
-On 4 September 2025, the Court of Justice of the European Union delivered a 
-judgment setting aside and remitting the preliminary ruling issued by
-the General Court in the \textit{EDPS} v \textit{Single Resolution Board} case. 
-In this case, during the resolution of Banco Popular, the SRB conducted hearings to verify that 
-creditors and shareholders would not suffer detriment, and provided this information, 
-pseudonymised, to the independent evaluator, Deloitte. The EDPS found that the SRB had breached
-the transparency obligation under Article 15(1)(d) of the GDPR by failing to disclose this 
-provision to the data subjects and ordered corrective action. 
-The SRB then challenged the validity of the EDPS decision. 
-The General Court's preliminary ruling annulled the EDPS decision. 
-The CJEU judgment setting aside this ruling clarifies when and from whose perspective 
-the identifiability of the data subject should be assessed.
+This template is an extension of the techreport template published 
+by the Information Processing Society of Japan for the use of
+Electronic Intellectual Property Research Group.
+The modification covers the citation of japanese literature, laws in Japan, US, and the EU, cases in Japan and the CJEU.
 \end{eabstract}
 
 
 \begin{jkeyword}
-GDPR, 仮名化, パーソナルデータ, 容易照合性
+\LaTeX, テンプレート, 情報処理学会
 \end{jkeyword}
 
 
 \begin{ekeyword}
- GDPR, pseudonymisation, personal data, easily collated
+\LaTeX, template, IPSJ
 \end{ekeyword} 
 
 \maketitle
 
 \section{はじめに}
-個人情報の中から特定個人を識別できる情報（以下「識別情報」という。）のみを
-取り除いて、それ単体からは本人を識別できなくする「仮名化」は実務で広く使われている。
-その主な目的は、データの取扱いに不要な情報を取扱う者に渡さないというリスク低減である。
-特に識別情報は、それを含むと本人へ影響を与えることが可能になりリスクが高いにもかかわらず、
-本人に固有の情報であるが故に他レコードと集計、統合して分析しても往々にして価値を生まないため、
-近年隆盛している高度なデータ分析を活用する実務において
-個人情報がまず仮名化データになって利用に供されることは珍しくない。
-
-利用を含む取扱いに際しては、仮名化データがデータ保護法の保護対象となるかは重要な意味を持つ。
-日本の個人情報保護法の下では仮名化されたデータの一部は
-仮名加工情報として、第三者への提供や再識別をしないことを前提に
-規制の緩和が図られている。
-また、仮名加工情報ではない仮名化データを第三者に提供する場合には、
-当該提供用データは提供元においては個人データであり、
-提供先においては非個人データとなるとして、対応する規律が課されるのが一般的である。
-一方、EUの一般データ保護規則(GDPR)の下では第4条(5)で「仮名化」の定義がなされ、
-データ保護バイデザインやデータ最小化に資する措置とされているものの、
-仮名化されたデータを処理する際にどのような論理でどのような規律が適用されるかは
-明記されていなかった。
-
-\textit{Single Resolution Board (SRB)}事件は
-仮名化データが第三者に提供される際に、パーソナルデータに該当するかが争いの焦点の1つとなっており、
-2025年9月4日に欧州司法裁判所が判決を下したため本報告ではその検討を行う。
-
-\section{参照された判例}
-
-\textit{SRB}事件の欧州司法裁判所判決ではいくつかの判例が引用されているため、
-本節でまずそれらをまとめておく
-\footnote{
-    本節の内容の多くは猪谷\cite{igayaIPAddress2025}による。
-}。
-
-\subsection{\textit{Breyer}事件}
-\subsubsection{事件の概要}
-この事件は原告がドイツ連邦政府の運営するウェブサイトを閲覧したことを発端とする. 
-これらのサイトではサイバー攻撃への対策としてアクセスに関する情報をログファイルに保管していた. 
-その中にはどのページをいつ閲覧したか, そしてアクセスを行ったコンピュータのIPアドレスが含まれていた. 
-原告は, 連邦政府が障害発生時のサイト可用性を確保するのに必要な場合を除いて, 
-連邦政府がサイトにアクセスしたユーザのIPアドレスを保存したり第三者に保存させたりすることを
-禁じる命令を求める訴訟を提起した. 
-原告のコンピュータに割り当てられたIPアドレスは動的IPアドレスであり, 
-連邦政府はそれ単体では原告本人を特定することはできず, 
-原告がインターネット接続に用いたISPが保有する情報と合わせることで特定可能になるものである. 
-訴訟は第一審, 第二審を経てドイツ連邦裁判所で審理され, ドイツ連邦裁判所は欧州司法裁判所(欧州司法裁判所)に対し, 
-ウェブサイト運営者にとって動的IPアドレスは個人データに該当するかという点を含む
-付託を行った. 
-
-\subsubsection{判決の内容}
-\label{sssec:breyer}
-本件において欧州司法裁判所は後の判決で頻繁に引用されることとなる
-「情報が[データ保護]指令第2条(a)項の意味で個人データとして扱われるためには, 
-データ主体の特定を可能にするすべての情報が一者の手の内にあるべきという必要はない」
-という判断を下した\cite[第43段落]{PatrickBreyerBundesrepublik2016}. 
-しかし同時に, 第三者の範囲は「特定の第三者\cite[第67段落]{breyerAGOpinion2016}」であり, 
-管理者が特定を目的として追加データを求めることのできる者を指すと限定的に解釈した. 
-法務官Campos Sánchez-Bordonaはその理由を, そのように限定しなければ, 
-現在だけでなく将来にわたって仮説上の存在に留まるような
-第三者まで想定しなければならなくなり, 法が定める「合理的な可能性」の有無を
-判断することが不可能になるからと説明している\cite[第68段落]{breyerAGOpinion2016}. 
-
-本件に関して欧州司法裁判所は, 
-ドイツ法ではISPがサイト運営者に利用者特定につながる情報を直接明かすことは禁じられているが, 
-サイトがサイバー攻撃を受けた際には当局の協力の下でサイト運営者はISPから接続元の情報を得ることが可能であるという点に着目した. 
-このことから, ドイツ連邦政府は動的IPアドレスから本人を特定できる外部情報を得る合理的手段を有するとし, 
-連邦政府が保有する動的IPアドレスも個人データに該当すると
-判断した\cite[第49段落]{PatrickBreyerBundesrepublik2016}. 
-
-\subsection{\textit{Nowak}事件}
-\subsubsection{事件の概要}
-アイルランドのNowak氏が会計士試験を受検したところ、
-記述式試験に落第したため、成績への異議申し立てを2009年の秋に行った。
-しかし異議申し立てが却下されたため、Nowak氏はアイルランドのデータ保護法に基づいて2010年5月に
-試験実施機関が保有する彼に関するすべてのデータへのアクセスの請求を行った。
-試験実施機関は17の文書を送付したが、試験の答案の送付は、それがパーソナルデータに該当しないとして拒否した。
-Nowak氏はアイルランドデータ保護機関に相談をしたが、データ保護機関は試験実施機関の見解を支持するメールを送ったため、
-Nowak氏は正式な苦情の申し立てを行った。
-この訴えはデータ保護機関によって不当で根拠のないものとされ調査が行われず、
-その判断について巡回裁判所、高等裁判所、最高裁判所まで争われた。
-その中で最高裁判所は試験の答案がデータ保護指令におけるパーソナルデータに該当するか、
-そして該当するのであればどのような要素とその重み付けによってその該当性を判断すべきかについて、
-欧州司法裁判所の先決裁定を求めた。
-
-\subsubsection{判決の内容}
-欧州司法裁判所は答案はパーソナルデータであるとした。
-その理由として、答案の内容、目的、効果の観点から検討を行った。
-(i) 内容は受検者の知識や能力、思考過程を反映している、
-(ii) 目的は受検者の専門的能力や専門職に従事することへの適合性を評価するためである、
-そして(iii) 効果は受検者の権利や利益への影響がある、
-以上3つすべての面で受検者に関連するため、答案は本人に「関連する」と認定した\cite[第37-40段落]{nowakCase2017}。
-本節との関係では、データ保護指令のパーソナルデータ定義での「あらゆる情報」には
-客観的なものだけでなく主観的なものもデータ主体に「関連する」ものと認めた点\cite[第22段落]{nowakCase2017}と
-答案はNowak氏だけでなく採点者のパーソナルデータであると認めた点が重要である。
-
-\subsection{\textit{OC} v \textit{European Commission}事件}
-\subsubsection{事件の概要}
-この事件の原告はギリシャの研究者で欧州研究理事会執行機関(ERCEA)から資金提供を受けた
-研究プロジェクトに関連して, 欧州不正対策局(OLAF)から調査を受けた。
-OLAFはその結果を公表したが, 公表した情報の中に
-当該研究者のジェンダーや国籍, 研究プロジェクトを行っている施設, 
-研究予算の額といった情報が含まれていたため, 
-当該研究者が特定される事態を招き, 研究者がOLAFのGDPR違反を訴えた. 
-ここでは, 上記の公表情報と「その他の情報」を使って, 
-一般人が本人を識別可能であるかが論点のひとつとなった. 
-
-\subsubsection{判決の内容}
-
-付託を依頼した裁判所は, 実際に研究者を特定してTwitterに公開したドイツ人ジャーナリストが
-科学を専門としており, 研究者についての情報も持っていたとして
-一般的な読者ではないと判断している\cite[第53段落]{OCEuropeanCommission2024}. 
-しかし欧州司法裁判所は特定を行う者は実際に特定した者に限られるのではないとした上で, 
-公表情報から, 同じ研究領域で活動しており当該研究者の専門などを知っている人であれば, 
-不釣り合いな労力を割かずとも
-本人を特定できたであろうとした\cite[第60, 61段落]{OCEuropeanCommission2024}. 
-加えてERCEAが資金を提供している研究プロジェクトは70に留まっており
-その内容も公開されていることから, 
-一般的なインターネットユーザであってもプロジェクトリストを見ることで
-問題の研究者を特定できたであろうともした\cite[第63段落]{OCEuropeanCommission2024}. 
-したがって, プレスリリースに含まれる情報は個人データに該当しないという
-原審の判断は誤りであったと判断した\cite[第65段落]{OCEuropeanCommission2024}. 
-
-\subsection{\textit{IAB Europe}事件}
-\subsubsectioon{事件の概要}
-\textit{IAB Europe}事件とは, 欧州のデジタル広告業界団体であるIAB Europeが開発した, 
-EUの法令を遵守した形で行動ターゲティング広告の配信を行うための枠組み
-Transparency \& Consent Framework(TCF)に関する争いである\cite{Igaya-IABEuropeCJEU-2024}. 
-TCFを導入した広告配信事業者は, 一般のユーザから行動ターゲティング広告に関する同意等
-\footnote{「等」としたのは, 同意の他に正当な利益に対する異議申し立ても取り扱うためである. }
-の情報を受け取り, これをTC文字列と呼ばれる形式で保存する. 
-TC文字列にはユーザ本人やそのデバイス, アプリケーションを識別するような識別子は一切含まれていないが, 
-同意等の情報を取得した事業者においては, IPアドレスと同時に取得することとなるため, これとの紐づけは可能である. 
-このTC文字列を行動ターゲティング広告配信のためのデータとして利用することで, 
-ユーザの選択を尊重した形でのリアルタイム広告配信が可能となる. 
-TC文字列はユーザがあるウェブサイトやアプリ画面にアクセスする度に
-配信事業者に送信され, 表示する広告を決めるためのオークションに利用される. 
-IAB EuropeはTC文字列の作成や利用の方法を規格として定めたのみで, 
-個別のオークションには関与していなかった. 
-
-欧州司法裁判所への付託に際しては, 
-それ自体には本人を識別する機能を持たないTC文字列が個人データに該当するか?
-そして, 取扱いのための規格を定めたのみで個別に発生するTC文字列へのアクセス権を持たない
-IAB Europeにとっても個人データに該当するか?が論点となった. 
-
-\subsubsection{判決の内容}
-\label{sssec:judgment-iabeurope}
-欧州司法裁判所は上記論点に対して, TC文字列はそれ単体では個人を識別しないが, 
-処理の流れの中でIPアドレスと統合されることが明らかであるから, 
-TC文字列も個人データであるとした\cite[第45段落]{iabeurope2024}. 
-そして, その統合をIAB Europeが行っていないことや, 
-統合されたデータへIAB Europeはアクセス権を持たないことは, 
-個人データであるという評価を覆すものではないと判断した\cite[第46段落]{iabeurope2024}. 
-その根拠として欧州司法裁判所は\textit{Breyer}判決第43段落を引用している\cite[第47段落]{iabeurope2024}. 
-誰が取り扱っているかにかかわらず, 処理の中で本人を識別できれば個人データに該当するとした.
-
-\section{\textit{Single Resolution Board}事件}
-\subsection{事件の概要}
-Single Resolution Board(単一破綻処理委員会; SRB)は、
-ユーロ圏の銀行が経営危機や破綻に直面した際に迅速かつ効率的に破綻処理を実行し、
-金融システム全体や他国への影響を抑えるための仕組みである
-Single Resolution Mechanism(単一破綻処理メカニズム)の中核を担う組織である。
-SRBは2017年のBanco Popular Españolの破綻処理中、債権者や株主が不利益を被らないか検証するためにヒアリングを行った。
-そして、単一破綻処理メカニズム規則に基づき、
-単一破綻処理ではなく通常の破綻処理であればより有利な救済が得られたか否かを検証するために、
-ヒアリング結果を仮名化した上で独立評価者であるDeloitteに提供した。
-この提供の事実をデータ主体に開示しなかったことが問題となり、
-SRBはEDPSからGDPR第15条1項(d)の透明性義務違反を認定され、是正を命じられた。
-本事件はEDPSの決定の無効をSRBが訴えたものである。
-
-訴えにおいてSRBは、株主や債権者のコメントは事実や法的評価に関するもので
-個人や私生活に関するものではないこと\cite[第60段落]{SingleResolutionBoard2023}、
-Deloitteに提供されたデータは、提供先での再識別ができないよう加工が
-施されていることから仮名化データではなく匿名化データである\cite[第76段落]{SingleResolutionBoard2023}と主張した。
-
-一方のEDPSは、コメントは株主や債権者に関する情報でありパーソナルデータに該当する上、
-このコメントにより本人は補償を受けられるか否かが決まる以上効果を鑑みてもやはりパーソナルデータに該当すると主張した
-\cite[第61,62段落]{SingleResolutionBoard2023}。
-提供されたデータが仮名化データか匿名化データに関しては、
-本人を識別する追加情報にアクセスできない者にデータが送信されたからといって、
-仮名化データであることは変わらないと論じた\cite[第79段落]{SingleResolutionBoard2023}。
-EDPSの主張では、仮名化データと匿名化データを分けるのは
-本人を特定可能にする追加情報の存否であり、誰がそれへのアクセス権を持つかは問題ではないとしている
-\cite[第81段落]{SingleResolutionBoard2023}。
-
-\subsection{一般裁判所判決の内容}
-
-まず提供されたデータがパーソナルデータであるかに関し一般裁判所は、
-「その情報があるひとりの自然人に関する情報であるか」
-「その情報により当該自然人を識別できるか」のふたつの観点で検討を行った\cite{SingleResolutionBoard2023}。
-最初の観点については、
-EDPSが個人の意見はすべてパーソナルデータであるとの見解の下で
-Deloitteに提供されたデータの内容を検証しなかったと明かしたことを記した上で、
-確かにその可能性は否定しないが、データの内容、目的と効果の観点から、特定個人にそのデータが紐づけられるかを
-検証しなければならないと指摘した。
-そして、それを行っていない以上、Deloitteに提供されたデータがあるひとりの自然人に関する情報と結論づけることはできない
-とした\cite[第72-74段落]{SingleResolutionBoard2023}。
-2つ目の観点について、DeloitteとSRBをそれぞれ\textit{Breyer}事件における
-ウェブサイト運営者とISPに、「匿名化」されたコメントを動的IPアドレスになぞらえ、
-Deloitteに提供されたデータが合理的に可能な手段によって本人を識別できるかをEDPSは検証すべきであったが、
-それを行っていない以上EDPSは提供データにより個人を識別可能であると結論づけることはできないとした
-\cite[第99-105段落]{SingleResolutionBoard2023}。
-
-\subsection{欧州司法裁判所の判決の内容}
-一般裁判所の判断が誤っていると上訴したEDPSの主張のうち、欧州司法裁判所が検討を行ったのは
-パーソナルデータの定義における(1) 自然人に「関する」の解釈、(2) 自然人の「識別」の解釈である。
-
-\subsubsection{自然人に「関する」の解釈}
-
-(1)の論点となったのは「個人的意見はその意見を述べた者に『関する』ものか」というものであった。
-EDPSの主張は以下のようにまとめることができる。
-
+このテンプレートは情報処理学会電子化知的財産・社会基盤(EIP)研究会の研究報告で使うために、
+同学会が公開している\LaTeX テンプレートを拡張したものです。
+元のテンプレートはEIP研究会が参照する文献の扱いに以下のような課題がありました。
 \begin{enumerate}
-    \item すべてのケースにおいて、問題となるデータが自然人に「関する」ものかを検討する必要はない。
-        そして、問題の仮名化データは単一破綻処理メカニズムでの補償に関する個人的意見をなので、意見を発した債権者等に関する情報であることは明らかである。
-    \item Deloitteに仮名化ID付きのデータが渡されたことも根拠となる。
-    \item 一般裁判所の決定は、第7段落でDeloitteへ渡されたデータは特定の自然人への
-        補償のためとしているにもかかわらず、第73段落では自然人に関するものであることを
-        EDPSが示していないと述べており矛盾している。
+    \item 文献管理ソフトと併用すると和文文献の著者名が「名 姓」になってしまう。
+    \item bstファイルに判例や法律といった文献タイプの関数が定義されていない。
 \end{enumerate}
-これらに対するSRBの主張は、
-\begin{enumerate}
-    \item \textit{Nowak}事件判決等で主観的意見も自然人に関するものであれば
-        パーソナルデータとなる。そして、自然人に「関する」か否かは、その内容、
-        目的や効果によってその人に紐づけられるかの
-        検討を行わずに決めることはできないという一般裁判所の判断は正しい。
-    \item EDPSの主張はこの不服を受けた後に提出されたもので議論すべきではない。
-    \item 一般裁判所の決定第7段落ではデータの内容、目的、効果について言及していないので、
-        第73段落の結論とは矛盾しない。
-\end{enumerate}
+作者は自分用に上記に対応するbstファイルを作っていましたが、
+\LaTeX テンプレートがないことは文理の垣根を越えた研究を掲げるEIP研究会に
+理数系の研究者が参加するハードルになっているように思えたため、
+このテンプレートを提供することにしました。
 
-というものであった。
-これらの点について欧州司法裁判所は、
+\section{想定環境}
+この文書では、読者に基本的な\LaTeX の使い方の知識があることを想定して、
+法学関連の文献情報を適切に引用する方法を説明しています。
+\LaTeX の使用に不安のある方は\cite{okumuraLaTeX2023}などをご覧になるとよいでしょう。
 
+\subsection{コンパイル環境}
+このテンプレートはOverleaf (\url{https://overleaf.com/})での使用を前提としています。
+元テンプレートがplatexを想定しているためか、著者のローカル環境(Macintosh + lualatex)ではコンパイルが通らないためです。
+
+\subsection{\LaTeX パッケージ}
+URLの折り返しのため、urlパッケージとhyperrefパッケージが必須です。
+urlパッケージにはhyphensオプションを指定、
+hyperrefパッケージには、hidelinksオプションと、dviからpdfを生成するソフトウェア名をオプションと指定してください。
+なお、urlパッケージをhyperrefパッケージより前に指定する必要があります。
+この\TeX ファイルのプリアンブルを参考にしてください。
+
+\subsection{文献管理ソフト}
+以下ではZotero (\url{https://www.zotero.org/})の使用を想定して説明します。
+準備として、マイ・ライブラリ下に論文や研究プロジェクトごとにコレクション
+（音楽再生ソフトでの「プレイリスト」のようなもの）を作っておきます。
+左ペインの左上隅にある、フォルダアイコンに$\oplus $が付いているアイコン
+(図\ref{fig:doi}左の「マイ・ライブラリ」の左上にあるもの)を
+クリックするとコレクションを新規作成できます。
+
+\section{文献管理ソフトへの入力}
+
+\textbf{重要:}
+著者名の「名 姓」と「姓 名」の振り分けはZoteroの「言語」フィールド
+(bibitemのlangidがjapaneseか否か)が出力する
+langidの値で判定しています。
+なので、著者名を「姓 名」にしたい場合には、論文中で使われている言語によらず
+言語フィールドにはjaを入力してください。
+
+著者名を足したいときは、著者名入力欄の右にマウスオーバーすると
+$\ominus $と $\oplus $ が表示されるので、
+$\oplus $をクリックすれば追加の著者欄が出てきます。
+著者名の入力フィールドが2つに分かれている場合はauthorフィールドに「姓」「名」の順で、
+1つの場合にはinstitutionフィールドに値が入ります。
+著者名が「名 姓」の人であっても入力欄は左が姓で右が名なので注意しましょう。
+この2つを切り替えるには著者名入力欄の右にある長方形をクリックします。
+「著者名」の文字をクリックすると「編者」「訳者」等も選べます。
+ただ、「編著者」というのはないため「著者」に統一することになると思います。
+
+また、Zoteroのcitation keyの自動生成は結構長いものを生成するので、
+メインページで文献を右クリック→Better BibTeX→Change BibTeX Key...で手動設定すること
+をおすすめします。
+
+\subsection{和文論文}
+
+DOI等の文献番号が付されている場合には、
+メインパネル上部の杖のアイコン(図\ref{fig:doi})をクリックして入力すれば
+自動でインポートされます。
+ですが、ほとんどの場合言語フィールドは空なので適宜入力してください。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/doi.png}
+    \caption{DOI等でインポートするためのアイコン。}
+    \label{fig:doi}
+\end{figure}
+
+
+図\ref{fig:article_j}のように入力すると
+（DOIより下は自動で生成されるので入力の必要はありません。以下同様。）、\cite{itakuraDataSetLicense2022}のように
+出力されます。
+必須のフィールドは
 \begin{itemize}
-    \item パーソナルデータの定義は規則2018/1725の第3条(1)、GDPRの第4条(1)、
-        データ保護指令の第2条(a)で本質的に同一である。
-        画一的で整合性のあるEU法の適用のために、これらの解釈は同じように解釈
-        されなければならない
-        \footnote{データ保護指令時代の解釈等がGDPR下で有効か否かには議論がある
-        が\cite[p.173]{purtovaKnowingNameTargeting2022}、
-        この判示は少なくともパーソナルデータの定義に関しては同じように解釈すること
-        すなわちデータ保護指令時代の解釈も有効であることを示唆しており興味深い。}。
-    \item パーソナルデータの定義には「あらゆる情報」とあり、これには
-        客観的なものだけでなく主観的なもの、例えば意見や評価のようなものも含む。
-    \item 一般裁判所は決定の第70段落で、Deloitteに移転したデータの内容、目的、効果を
-        EDPSが検証していないと述べているが、第71,72段落にあるように
-        債権者等のコメントは当人の意見や見解であることをEDPSが認めており、
-        EDPSはコメントの内容を検討したことは明らかである。
-        内容、目的、効果は``or''で接続されているのだから、内容を検討した結果
-        個人に関する情報であると判断できれば、他2つについて検討をする必要はない。
-    \item 一般裁判所は内容、目的そして効果すべてを検討することを求めている。
-        \textit{Nowak}事件判決でも採点済み答案は採点者のパーソナルデータであるか
-        その内容、目的、効果すべてを検討したが、採点者の意見や見解であることによって
-        肯定されている。
-    \item この点についてはEDPSの主張が正しいと結論づける。
+    \item タイトル
+    \item 著者名
+    \item 雑誌名
+    \item 出版年月日(年だけでOK)
+    \item 言語
+\end{itemize}
+です。これらに加えて巻とページ数も普通は入ると思います。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/article_j.png}
+    \caption{和文論文での入力例。}
+    \label{fig:article_j}
+\end{figure}
+
+\subsection{和文書籍}
+Zoteroの文献番号インポート機能(図\ref{fig:doi})はISBNにも対応していますが、
+ISBNから引っ張ってこれる和文書籍の情報はフォーマットが統一されていないようなので
+手動で入力した方が良さそうです(図\ref{fig:book_j})。
+
+必須のフィールドは
+\begin{itemize}
+    \item タイトル
+    \item 著者名
+    \item 出版社名
+    \item 出版年月日(年だけでOK)
+    \item 言語
 \end{itemize}
 
-という判断を下した。
+です。これによって\cite{retrospectHoribe2023}のように出力されます。
 
-\subsubsection{自然人の「識別」の解釈}
-\label{sssec:identifiability}
-(2)の論点は更に2つに分けられている。
-1つめが「仮名化データは常にパーソナルデータであるか」である。
-EDPSの主張は以下のようにまとめることができる。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/book_j.png}
+    \caption{和文書籍での入力例。}
+    \label{fig:book_j}
+\end{figure}
+
+\subsection{和文書籍の章}
+
+書籍とほとんど変わりませんが、必須のフィールドは
 \begin{itemize}
-    \item GDPR第4条1項の識別が誰によって行われるべきか明記されていないのであるから、
-        誰かが識別できればパーソナルデータに該当する。
-    \item そして本事件では仮名化を行ったSRBが本人を識別可能であったこと、
-        GDPR前文16条に仮名化を施したデータは個人を識別可能であると記されていることから、
-        提供されたデータはパーソナルデータである。
-    \item EDPBは、仮に一般裁判所の解釈に従った場合、
-        パーソナルデータが識別可能な情報を含まない形でcontrollerの外に出た際
-        その性質(パーソナルデータ該当性)が変わってしまい、
-        高水準の保護を達成すべきEUデータ保護法の保護対象から外れてしまうと懸念している。
-    \item 一般裁判所の決定は仮名化データを匿名データと見なす過ちを犯しており、
-        EU法の高い保護を掘り崩すものである。EDPBも仮名化データの共有、公開、第三国移転
-        を許すことになるという意見である。
+    \item 章のタイトル(題名)
+    \item 著者名
+    \item 書籍名
+    \item 出版社名
+    \item 出版年月日
+    \item 言語
 \end{itemize}
-と主張した。SRBはこれらすべてに反論した\footnote{
-    反論の内容は判決文に記載されていない。
-}。
-この点に関して欧州司法裁判所は、
+が必須です。また、編者名も入れるのが良いでしょう(図\ref{fig:book-chapter_j})。
+これによって\cite{Horibe-InternationalCoherence-2010}のように出力されます。
 
-\begin{enumerate}
-    \item 原則的にはあるデータ主体が識別される/されうるかは問題となっている情報から
-        判断することをGDPRは想定している。
-    \item 仮名化とは、追加情報なしで本人を識別できなくするもので、
-        その追加情報は技術的組織的措置によって分離される。
-        つまり仮名化データには識別を可能にする追加情報の存在が想定されており、
-        この点によって匿名化データとは異なるものである。
-    \item SRBは仮名化データから本人を識別する追加情報にアクセスできたのだから
-        仮名化データはパーソナルデータである。一方Deloitteにとっては
-        当該追加情報にアクセスできない措置が講じられているのでパーソナルデータではない。
-    \item 識別可能性については「その他の者によって」「考えられる合理的手段で」という限定がある
-        ところ、仮名化データがすべてパーソナルデータであるとするとこの限定が
-        意味をなさなくなる。
-    \item \textit{OC} v \textit{Commission}事件では、欧州司法裁判所は
-        事件の発表をした機関が追加情報を保有しているかの検討に留まらず、
-        インターネット上の情報で本人を識別可能かの検討を行ったのはそのためである。
-    \item 同様に\textit{Breyer}事件や\textit{IAB Europe}事件では
-        もともとパーソナルデータでないものが、controllerの追加情報によって
-        識別可能になることを示している。
-    \item 仮名化データがパーソナルデータでない場合もあることに基づけば、
-        当該データが法の傘から不当に外れるというEDPSの主張は誤りである。
-        これらの判例によれば、この事実は、とりわけ、当該データが第三者に転送される可能性のある
-        状況において、当該データの個人情報の性質に関する評価に影響を与えない。
-        一方で、\textbf{第三者が自分のデータと照合して仮名化データを本人に戻せる手段を
-        有する可能性を排除できないならば、移転前後問わず識別可能とみなさなければならない。}
-    \item したがって、EDPSによる、仮名化データは常にパーソナルデータという主張は容れること
-        はできない。個別状況に応じて判断が必要である。
-    \item EDPSは法による高い保護を達成するためにパーソナルデータの概念が広くなければ
-        ならないと主張するが、とはいえどこまでも広くて良いわけではない。
-    \item 仮名化データの提供先ではGDPR第15条の情報提供義務を果たすこともできない。
-\end{enumerate}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/book-chapter_j.png}
+    \caption{和文書籍の章での入力例。}
+    \label{fig:book-chapter_j}
+\end{figure}
 
-と判示し、EDPSの主張を不採用とした。
+\subsection{和文学会発表}
 
-第2の論点は、「識別可能性は誰の視点で判断するべきか」である。
-EDPSはその判断はcontrollerであるSRBの視点で行うべきであり、
-controllerではないDeloitteの視点で行う必要はないと主張した\cite[第92,93段落]{EuropeanDataProtection2025}
-\footnote{EDPSはDeloitteがcontrollerではないと主張したが、processorであるとは述べていない。}。
-SRBはそれぞれのcontrollerの視点で判断すべきであり、
-Deloitteは識別を可能にする追加情報にアクセスできなかったのだから
-\textit{Breyer}事件をそのまま適用はできないと反論した。
-欧州司法裁判所は、GDPRが誰の視点で識別可能性を判断すべきかは明言しておらず、
-\textit{Breyer}事件欧州司法裁判所判決でも識別可能にする情報が一者の手の内にあることを
-求めていないことを認め、
-個別事例ごとに判断すべきとした。
-そして、今回の事例ではSRBがDeloitteを潜在的受領者になることを
-プライバシー・ステートメントで言及しなかった
-ことが透明性義務違反になったものであることを確認した。
-潜在的受領者の情報は、本人がデータ収集に応じるか決定する際の重要な情報なので、
-パーソナルデータ収集時点で告知されるべきものであるとした。
-そして透明性の義務はcontrollerとデータ主体の間のものである以上、
-識別可能か否かもその収集時点で判断すべきであり、
-受領者であるDeloitteにおいてパーソナルデータであるかは論じる必要がない、と判断した。
-その結果、Deloitteにおいてパーソナルデータであるかとは無関係にSRBの透明性義務違反を認めた
-\cite[第99-116段落]{EuropeanDataProtection2025}。
-結局、誰の視点で識別可能性を判断すべきかについて欧州司法裁判所は判断を下さなかったことになる。
+アイテムを「学会発表」にした上で、言語を「ja」にします(図\ref{fig:inproceedings_j})。
+必須フィールドは
+\begin{itemize}
+    \item 題名
+    \item 著者名
+    \item 出版年月日
+    \item 紀要名
+    \item 巻
+    \item 言語
+\end{itemize}
+です。学会名を入力することもできますが、
+海外のプロシーディングスを引用する際には学会名より紀要名を利用する（紀要名に学会名が入っている）ことが多いようなので、
+現在「学会名」は引用に使うようにはなっていません。
+これにより\cite{igayaIPAddress2025}のように出力されます。
 
-\section{分析}
-\subsection{\textit{SRB}事件判決の議論は日本の議論と同じなのか}
-仮名化されたパーソナルデータが第三者に提供された場合、
-それが提供先においてデータ保護法の保護対象となるかという論点は日本でも提供元基準か提供先基準かという形で見ることができる。
-この点については2015年個人情報保護法改正の際の参考人質問で提供元基準である
-とされるため\cite[発言番号10]{mukai2015}、
-提供元で個人データで提供先で個人データでない場合であれば
-個人データの第三者提供に関する規律が適用される\cite[p.311]{okadaAppi2024}。
-仮名化データ提供元のSRBにおいてはパーソナルデータであるが
-提供先のDeloitteではパーソナルデータではないとした
-\textit{SRB}事件の欧州司法裁判所判決はこれと類似している。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/proceedings_j.png}
+    \caption{学会発表の入力例。}
+    \label{fig:inproceedings_j}
+\end{figure}
 
-しかし、議論の外形はほぼ同じであるとはいえ、
-日EUで「提供先において個人を識別する」の閾値に差が存在することに
-注意が必要である\cite{igayaIPAddress2025}。
-日本法の下では提供先の仮名化データが特定個人を識別するか否かは、
-当該データと容易に照合可能な範囲のデータを勘案して決まる。
-ここで「容易に照合可能」は「通常の業務における一般的な方法で、他の情報と
-容易に照合することができることをいい、例えば、他の事業者への照会を要する場合等であって
-照合が困難な状態は、一般に、容易に照合することができない状態であると解される。」
-\cite[p.6]{PPC-guidelineGeneral-2016}
-とされている。
+\subsection{法}
+アイテムは「法律」を選択します。
+抄録欄への入力内容で引用形式を振り分けています。現在対応している法と抄録への入力内容は、
+\begin{description}
+    \item [日本法] Jlaw
+    \item [米国連邦法] USlaw
+    \item [米国州法] USstatelaw
+    \item [EU法] EUlaw
+\end{description}
+です。
 
-一方でEUの場合は前述の欧州司法裁判所判決(\ref{sssec:identifiability}(7)の太字部分)に
-あるように、「第三者が自分のデータと照合して仮名化データを本人に戻せる手段を
-有する可能性を排除できないならば、移転前後問わず識別可能とみなさなければならない」
-とされている。
-\ref{sssec:breyer}で触れた通り、
-\textit{Breyer}事件判決はサイバー攻撃という例外的事態の下でのみ
-ウェブサイト運営者がISPにIPアドレスに紐づくユーザ情報を求めることができることを
-以て、ウェブサイト運営者が保有するIPアドレスをパーソナルデータと判じた。
-つまり日本と違って「通常の業務における一般的な方法」ではなく、
-「他の事業者への照会を要する場合」であっても、
-「戻せる手段を有する可能性を排除できない」とされる。
-したがって、仮名化データの個人識別性に関する議論は、
-日EUで同じ外形を持つが内実としては違いがあるとするのが適切であろう。
+\subsubsection{日本法}
+以下を入力すると(図\ref{fig:jlaw})、
+\begin{itemize}
+    \item 法令名
+    \item 法律番号
+    \item 言語はjaと入力
+    \item 抄録にJlawと入力
+\end{itemize}
+\cite{appi2003}のように引用されます。
 
-\subsection{日EUデータ保護法の下部構造の違い}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/Jlaw.png}
+    \caption{日本法(個人情報保護法)の入力例。}
+    \label{fig:jlaw}
+\end{figure}
 
-さらに、双方のデータ保護法が前提とする規制の「単位」を踏まえると、
-日本の仮名化データに係る判断がこれまでの日本法の構造に沿ったものであるのに対し、
-本事件の仮名化データに係る判断はこれまでの判例に必ずしも沿っていないことがわかる。
+\subsubsection{米国連邦法}
 
-\subsubsection{日本の``operator-first''下部構造}
-\label{sssec:operator-first}
-日本の個人情報保護法は``operator-first''の下部構造を持つ。
-すなわち個人情報保護法においては``operator''すなわち
-個人情報取扱事業者、匿名加工情報取扱事業者、仮名加工情報取扱事業者、
-個人関連情報取扱事業者が規制の最も基盤となる位置にある。
-個人情報という制度の中心に位置する保護対象ですら、
-ある情報がそれに該当するか否かはその内容だけでは決まらず
-\footnote{個人識別符号を含む場合を除く}、
-それを取扱う事業者の中、もしくは事業者の外であっても
-容易に照合可能な範囲で特定個人を識別できるか否かによって判断される。
-逆に言えば、個人に関する情報に対して行われる一連の処理の目的や手段が決まっていたとしても、
-誰によってその処理が分担されるかが決まらない限りは、
-どの規制が適用されるか ---規制の対象外になるのか含めて--- が決まらない。
-今回問題になっている、ある事業者に個人情報があり、
-その中から特定性の高い情報を除いた上で提供用IDを付した、
-いわゆる「仮名化」を行った情報を第三者に提供する場合が好例である。
-この提供用データは、提供元基準により提供元においては個人情報となるが、
-提供先においてはその情報からのみでは特定個人を識別できないため、個人情報に該当しない。
-同じデータであってもそれを保有する事業者の取扱い体制によって個人情報該当性が変わるということは、
-日本では\textbf{情報よりも事業者が先にある}ことの証左の一つと言えよう。
+以下を入力すると(図\ref{fig:uslaw})、
+\begin{itemize}
+    \item 法令名
+    \item コード (United States CodeならU.S.C.など)
+    \item 法律番号
+    \item 施行期日 (法典の版)
+    \item 抄録にUSlawと入力
+\end{itemize}
 
-この事業者先行の考え方を「下部構造」と呼んだのは、
-上述の個人情報該当性だけでなく、個人情報保護法の他の規定にも同様の考え方が埋め込まれており、
-正に法規制の在り方を下支えする枠組みとなっているためである。
-例えば利用目的に関する規定を見ると、一般的な利用目的であれば
-「あらかじめその利用目的を公表している場合を除き、速やかに、その利用目的を、
-本人に通知し、又は公表しなければならない(個人情報保護法第21条1項)」のに対し、
-第三者への提供が想定されている場合には
-同意またはオプトアウトを義務とする(第27条1項及び2項)とする上に、
-「利用目的において、その旨を特定しなければならない」\cite[p.69 3-6-1]{PPC-guidelineGeneral-2016}とされている。
-個人データの第三者提供を受けた者は、提供する者が個人情報を取得した際に
-特定した利用目的を超えて個人データを利用することができると
-解されている点\cite[p.137]{okadaAppi2024}、
-個人データの第三者への提供であっても
-委託、事業承継、共同利用の3類型については第三者提供に係る規制が課されないが、
-それは「第三者に該当しない(第27条5項)」と整理されている点、
-逆に委託先はその前提を掘り崩すような取扱い、
-例えば自らのための取扱いや、他委託元データとの統合など、
-委託元ができないような個人情報の取扱いを行うことができない点
-\cite[Q7-41, Q7-42, Q7-43]{PPC-guidelineQA-2017}(いわゆる「まぜるな危険」問題)、
-他にも個人関連情報や仮名加工情報に関する規定も事業者の「境界」に着目して規制が組み立てられている。
+\cite{CopyrightAct19762012}のように引用されます。
 
-上に挙げた5つの例に関する規定はいずれも実務でデータを取扱う際に参照する規則の中核といえる部分であり、
-これらが事業者(operator)の「境界」に着目して規制を組み立てていることは
-日本法にoperator-firstの下部構造があることを強く示すものと言えるだろう
-\footnote{
-    個人情報保護委員会事務局による個人情報保護法の解説の中でも
-    「事業者単位で規制を行っている」という発言をしばしば聞くことがある。
-    また、宍戸も2024年の情報ネットワーク法学会の討論で個人情報保護法が
-    事業者単位の規制であることを指摘している\cite{inlaw2024}。
-}
-。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/USlaw.png}
+    \caption{米国連邦法(著作権法)の入力例。}
+    \label{fig:uslaw}
+\end{figure}
 
-\subsubsection{EUの``operation-first''下部構造}
+\subsubsection{米国州法}
+以下を入力すると(図\ref{fig:usstatelaw})、
+\begin{itemize}
+    \item 法令名
+    \item コード
+    \item 施行期日
+    \item ページ数 (冒頭のセクション番号)
+    \item 抄録にUSstatelawと入力
+\end{itemize}
+\cite{ccpa2018}のように引用されます。
 
-他方、GDPRが採用している下部構造は、Wong
-\cite{wongProblemsControllerbasedResponsibility2021}が指摘する
-ように、操作に主に着目する``operation-first''のものである。
-つまり、ある一連の操作や「ステージ」のどこかのステップで個人を特定可能になるのであれば、
-その処理に関わるデータは全てパーソナルデータとなる。
-実際、欧州司法裁判所は
-これまでパーソナルデータ該当性は「操作」(operation)や複数の操作から
-成る「ステージ」によって判断する判例を複数出してきた。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/USstatelaw.png}
+    \caption{米国州法(CCPA)の入力例。}
+    \label{fig:usstatelaw}
+\end{figure}
 
-ステージに言及した判例の代表例が
-\textit{Wirtschaftsakademie}事件の欧州司法裁判所判決であり、
-「事業者はパーソナルデータ処理の異なる\textbf{ステージ}に、異なる程度で関与しうる」
-\cite[第43段落。強調は筆者による。]{wirtschaftsakademie2018}としている。
-後に\textit{Fashion ID}事件で欧州司法裁判所法務官のBobekがこれに着目した。
-この事件では、E-コマースサイトである Fashion ID GmbHが商品詳細ページに
-FacebookのLikeボタンを埋め込んだことにより、
-閲覧者がLikeボタンをクリックしたか否かにかかわらず、
-ページロード時点で閲覧端末の情報がFacebookに送信されることが問題視された。
-Fashion IDはLikeボタンを埋め込みはしたものの、
-それによってFacebookに送信される情報の内容を決める権限は持たなかった。
-そのためFacebookが行う処理に関して、同社がDPDにおけるjoint controllerに
-該当するかが争点となった。
-この点に対して欧州司法裁判所は、Fashion IDはFacebook Irelandとjoint controllerであると判断した。
-Bobekはこの点について、\textit{Wirtschaftsakademie}事件や\textit{Jehovan todistajat}事件への決定を引いて、
-Facebookに開示される情報を決定する権限をFashion IDが持たなかったとしてもjoint controller性は否定されるものではないとした
-\cite[第59-70段落]{fashionIDAGopinion2018} 。
-一方で、結果に影響を及ぼせない者に説明もなく責任を分配するのは「非合理で不正」と警告し、
-上記\textit{Wirtschaftsakademie}事件の判決を引いて
+\subsubsection{EU法}
 
-\begin{quotation}
-    処理の概念は管理者のそれと似てかなり広いとしても、
-    明らかに処理の中のステージを強調し焦点を当てている。
-    処理の概念は、単一の\textbf{操作}または\textbf{一連の操作}に触れた上で、
-    そうした操作のひとつひとつが何かを例示列挙している。
-    つまり論理的にいえば、controlの問題は、問題となっているそれぞれの操作ごとに評価されるべきであり、
-    処理と呼ばれている、大して意味のない何でもかんでもまとめたものについて評価されるものではない。 
-    \cite[第99段落。強調は原文のまま。]{fashionIDAGopinion2018}
-\end{quotation}
+以下を入力すると(図\ref{fig:eulaw})、
+\begin{itemize}
+    \item 法令名
+    \item 法律番号 (EU官報の巻号)
+    \item 施行期日 (EU官報の日付)
+    \item ページ数 (EU官報の最初の頁)
+    \item 抄録にEUlawを入力
+\end{itemize}
+\cite{gdpr2016}のように引用されます。
+EU官報の情報がない場合には、法律番号を空欄にすればスキップされます。
 
-と、joint controllerの評価を処理ではなく、
-1つ以上の操作から構成されるステージに関して行うのが適当であると述べた。
-つまり「Joint controllerとは、特定の操作が与えられている限りにおいて、
-その目的と手段を共有または共同決定する操作に関してのみ責任を負う」
-\cite[第101段落]{fashionIDAGopinion2018}のであって、
-一連の処理において自らが目的や手段の決定権を持たないような、
-前段または後段の操作に関しては責任を負いようがないとされた。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/EUlaw.png}
+    \caption{EU法(GDPR)の入力例。}
+    \label{fig:eulaw}
+\end{figure}
 
-\textit{IAB Europe}事件の欧州司法裁判所判決も
-\ref{sssec:judgment-iabeurope}で述べた通り、
-個人を識別しないTC文字列が処理の流れの中でIPアドレスと統合されることから、
-TC文字列をパーソナルデータに該当するとした。
-同時に、\textit{Fashion ID}欧州司法裁判所判決を引用しながら、
-ある者が一連の処理の中で目的や手段を決定していないような前段又は後段の操作に関しては
-controllerと見なされ得ないという解釈を示し、
-IAB Europeとその会員が行うTC文字列の処理と、それに続いて行われる、
-パーソナライズド広告の配信に係るパーソナルデータ処理とは区別されなければならないと判断した
-\cite[第73,74段落]{iabeurope2024}。
-これはターゲティング広告配信のためのパーソナルデータの処理が、
-\textit{Fashion ID}事件でいうステージ2つに分割されると
-欧州司法裁判所は判断したことを意味する。
+\subsubsection{その他の国・地域の法}
 
-また、処理の性質によってoperatorがcontrollerであるか否か自体が決まるという意見を、
-\index{すうぇーでん@スウェーデン}スウェーデンで起こった
-\index{norrastockholmbyggじけん@Norra Stockholm Bygg事件}\textit{Norra Stockholm Bygg}事件の
-欧州司法裁判所判決\cite{NorraStockholmBygg2023}に際して法務官\'{C}apetaが提出した意見に
-見ることができる
-\cite{OpinionAdvocateGeneral2022}。
-この事件は、Norra Stockholm Bygg AB(以下「Fastec」という。)がPer Nycander AB
-(以下「Nycander」という。)のためにオフィスビルを建設した際、
-NycanderがFastecの請求額を実際の稼働時間に比して過大と訴えたものである。
-Fastec従業員が租税対応のため利用していたEntral社の電子出勤簿データの開示を
-Nycanderが主張の裏付けのため求めたところ、
-Fastecがそのデータは別の目的のために収集されたもので、
-開示はGDPR違反であるとして争いになった。
-地方裁判所はEntralにデータの提出を求めたためFastecが控訴したが、控訴審も原審を支持した。
-そこでFastecはスウェーデン最高裁判所に棄却もしくは
-Entralに匿名化された出勤データ作成命令を求めて上告をしたところ、
-最高裁判所が欧州司法裁判所に対して以下2点に関する先決裁定を求めた。
-\begin{enumerate}
-    \item 各国法の開示義務は、GDPR第6条(3)(4)の根拠となるか？
-    \item もし根拠となるのであれば、パーソナルデータの処理が伴う開示の決定がされた際に
-    データ主体の利益を尊重しなければならないか？
-    そのような状況下で、EU法はどのように決定すべきか詳細に定めているか？
-\end{enumerate}
+抄録に上記以外の値を入力（大文字・小文字違いや空欄を含む）すると(図\ref{fig:prclaw})、
+デフォルトの引用形式
+\cite{pipl2021}
+が出力されます。
 
-この先決裁定のための法務官\'{C}apeta意見の中に、
-問題となるデータの開示は元来の租税対応とは異なる目的のための処理であり、
-開示を命じるスウェーデンの裁判所が処理の目的と手段を決定するので
-裁判所がNycanderと
-\index{jointcontroller@joint controller}共同でcontrollerになるという主張があり、
-注目に値する\cite[第22段落]{OpinionAdvocateGeneral2022}
-\footnote{
-    ただしこの分析は欧州司法裁判所判決では言及されていない上に、
-    現実の処理の目的や手段の決定とは独立に訴訟法がcontrollershipを決めてしまうことについての
-    検討が足りていないという指摘もある\cite{bonettoCaseNoteWhich2024}。
-}。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/PRClaw.png}
+    \caption{その他国・地域の法(中華人民共和国個人情報保護法)の入力例。抄録に入力された「PRClaw」は無視され、
+    デフォルトの引用形式で出力される。}
+    \label{fig:prclaw}
+\end{figure}
 
-\subsubsection{\textit{SRB}事件判決をどう解釈するか}
 
-このように近年の欧州司法裁判所は
-処理の操作やステージに着目してパーソナルデータ該当性や
-controller該当性を議論してきた。
-しかし\textit{SRB}事件では、ステージに着目することなく
-事業者単位でパーソナルデータ該当性を判断しており、
-\ref{sssec:operator-first}で述べた「情報よりも事業者が先にある」ことを示しており、
-これまでと整合しないように思われる。
-この齟齬をどう捉えるかについては2つの可能性があろう。
-(1) EUのデータ保護法制が``operation-first''下部構造のみに貫かれているわけではなく、
-事例によっては``operator-first''で判断される場合もあるという「並存」と見るもの、
-(2) 今回の事例ではSRBによる処理とDeloitteによる処理が別物であることが
-欧州司法裁判所の理解の下では自明であるため、
-処理（のステージ）の区切りは事業者の区切りと一致し、
-それによって``operation-first''が見えなくなっているに過ぎない、
-いわば「ショートカット」として見るものである。
+\subsection{判決など}
 
-この2つのうち筆者は後者の方が自然であるように思われる。
-理由としては、(i) 2つの下部構造の並存で見た場合、
-どのような場合にどちらの下部構造によって判断すべきかの基準が不明確になること。
-(ii) controllerはステージ、少なくとも処理の目的や手段を決定する者と定義されており、
-\textit{IAB Europe}事件欧州司法裁判所判決や
-\textit{Norra Stockholm Bygg}事件法務官意見なども、
-controller\textbf{以前に}ステージや処理があると想定していること。
-(iii) \textit{SRB}事件でのDeloitteはSRBによって指定されたとはいえ
-「独立した評価者」として補償について評価する役割を担っており、
-Deloitteによる評価に係る処理に関してSRBが決定した形跡が認められないこと。
-加えて、訴訟当事者であるEDPSやSRBが「誰の視点から見てパーソナルデータであるか」という
-形で主張を行った以上、それを無視して処理やステージにのみ着目して判決を
-書くことが難しかったという理由もあるかもしれない。
-これらの理由から\textit{SRB}事件判決を「ショートカット」として見られるのであれば、
-GDPRは引き続きoperation-first下部構造に立脚しているといえることになる。
+アイテムを「訴訟」にします。
+抄録やレポーター、リポーター巻への入力内容で引用形式を振り分けています。
 
-\section{まとめ}
+\subsubsection{日本の判決や審決}
+公刊物に登載されている判決や審決の場合、図\ref{fig:case_japan_reported}のように入力すると、
+\cite{niftyserveCase2002}のように出力されます。
+必須のフィールドは
+\begin{itemize}
+    \item 事件名（裁判所名称 裁判形式 判決年月日までを記入）
+    \item 決定期日（西暦で入力。文献ソフトでの管理用です）
+    \item レポーター (掲載誌名)
+    \item リポーター巻（掲載誌の号）
+    \item 最初のページ（掲載誌の最初のページ）
+    \item 抄録に「Jcase」
+\end{itemize}
+また、読者の便宜のために事件の通称を付したい場合は、「題名(略)」に入力します。
+事件整理番号に事件番号を入れても構いません。
 
-本報告では、
-第三者に提供される仮名化データが提供元にとってパーソナルデータであり
-提供先にとって非パーソナルデータであるとした\textit{SRB}事件の欧州司法裁判所判決を検討した。
-その議論は日本のそれと類似していること、
-しかしながら内実としては異なる部分もあること、
-そして事業者単位で判断している本判決であるが
-処理単位の見方を否定したわけではないことが示唆されると論じた。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/case_japan_reported.png}
+    \caption{日本の判決や審決で公刊物に登載されているものの入力例。}
+    \label{fig:case_japan_reported}
+\end{figure}
 
-\bibliography{EIP110}
-\bibliographystyle{ipsjunsrt}
+公刊物に登載されていない判決の場合、図\ref{fig:case_japan_notreported}のように入力すると、
+\cite{vtuber2021}のように、「公刊物未登載」の文言付きで出力されます。
+必須のフィールドは
+\begin{itemize}
+    \item 事件名（裁判所名称 裁判形式 判決年月日までを記入）
+    \item 決定期日（西暦で入力。文献ソフトでの管理用です）
+    \item 事件整理番号
+    \item 抄録に「Jcase」
+\end{itemize}
+また、読者の便宜のために事件の通称を付したい場合は、「題名(略)」に入力します。
+なお、公刊物には掲載されていないが裁判所等のウェブページで閲覧できる場合にはURLを入力しておくと
+「公刊物未登載」の文言が「裁判所等のウェブページ参照」に差し替わります。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/case_japan_notreported.png}
+    \caption{日本の判決や審決で公刊物に登載されていないものの入力例。}
+    \label{fig:case_japan_notreported}
+\end{figure}
+
+判例DBに掲載されている場合は、
+\begin{itemize}
+    \item 事件名（裁判所名称 裁判形式 判決年月日までを記入）
+    \item 決定期日（西暦で入力。文献ソフトでの管理用です）
+    \item レポーター(DB名称)
+    \item 最初のページ(文献版号)
+    \item 抄録に「Jcase」
+\end{itemize}
+とすることもできます(図\ref{fig:case_japan_db})。
+これにより\cite{vtuber2020}のように引用されます。
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/case_japan_db.png}
+    \caption{日本の判決でDBに掲載されているものの入力例。}
+    \label{fig:case_japan_db}
+\end{figure}
+
+\subsubsection{CJEUの判決}
+
+図\ref{fig:case_cjeu}のように入力すると\cite{PatrickBreyerBundesrepublik2016}のように出力されます。
+必須のフィールドは
+\begin{itemize}
+    \item 事件名
+    \item 裁判所
+    \item 決定期日
+    \item 事件整理番号
+    \item 最初のページに欧州判例法識別子(ECLI)
+    \item 抄録に「CJEUcase」
+\end{itemize}
+です。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/caseCJEU.png}
+    \caption{欧州司法裁判所判決の入力例。}
+    \label{fig:case_cjeu}
+\end{figure}
+
+\subsubsection{その他の国・地域の判決}
+抄録に「Jcase」「EUcase」「Jdiet（\ref{ssec:jdiet}節参照）」以外の文字列（大文字・小文字違いや空欄も含む）を入力すると
+（図\ref{fig:case_other}）、jurisdictionのデフォルトの引用形式として
+\cite{conseildetatBodyTemp2020}のように出力されます。
+必須のフィールドは
+\begin{itemize}
+    \item 事件名
+    \item 裁判所
+    \item 決定期日
+\end{itemize}
+です。「事件整理番号」「最初のページ」にも対応しています。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/case_other.png}
+    \caption{その他の国・地域判決の入力例。抄録に入力された「Francecase」は無視され、
+    デフォルトの引用形式で出力される。}
+    \label{fig:case_other}
+\end{figure}
+
+
+\subsection{国会議事録}
+\label{ssec:jdiet}
+アイテムは「公聴会」を選択した上で、「抄録」にJdietという文字列を入力してください。
+内部的には「訴訟」と同じくjurisdictionになってしまいます。
+必須のフィールドは
+\begin{itemize}
+    \item 題名
+    \item 立法機関
+    \item 出版年月日(委員会開催日)
+    \item 言語
+    \item 抄録に「Jdiet」
+\end{itemize}
+です(図\ref{fig:diet_j})。これによって\cite{Dai156Kai2003o}のように出力されます。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/diet_j.png}
+    \caption{国会議事録の入力例。}
+    \label{fig:diet_j}
+\end{figure}
+
+\subsection{ウェブページ}
+アイテム名を「ウェブページ」にします。
+なぜか図\ref{fig:doi}の丸をつけたアイコンの左にある
+新規アイテム作成をクリックして現れるリスト中に「ウェブページ」がありませんが、
+作成後に文献を選択して右ペインに出すと「アイテムの種類」から
+「ウェブページ」を選べるようになります。
+必須フィールドは
+
+\begin{itemize}
+    \item 題名
+    \item URL
+    \item アクセス日時
+    \item 言語
+\end{itemize}
+
+で、\cite{legislationCommittee25minute2000}のように出力されます。
+著者名やウェブサイト名は分かれば入れておいた方が良いと思います。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/webpage.png}
+    \caption{Webページの入力例。}
+    \label{fig:webpage}
+\end{figure}
+
+なお、著者名や公開年がわからない場合もあり、
+その場合には図\ref{fig:adh}のようになると思います。
+この場合の引用は\cite{googleADH}のように出力されます。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{./fig/adh.png}
+    \caption{著者名や公開年がわからない場合のウェブページの入力例。}
+    \label{fig:adh}
+\end{figure}
+
+
+\section{コレクションのエクスポートとOverleafへの取り込み}
+コレクションを右クリックして「コレクションをエクスポート...」を選択すると
+図\ref{fig:export}のダイアログボックスが表示されます。
+フォーマットを「Better BibLaTeX」に、
+Keep updatedにチェックを入れてOKをクリックするとエクスポート先を訊かれるので
+適宜選択すれば、コレクションがbibファイルとして保存されます。
+Keep updatedをオンにしているので、これ以降はコレクションの内容を更新すると
+自動でエクスポート先のbibファイルも更新されます。
+
+完成したbibファイルはOverleafの左ペインにあるアップロードアイコン（図\ref{fig:upload}）
+をクリックすればアップロード可能です。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.65\linewidth]{./fig/export.png}
+    \caption{コレクションエクスポート時に表示されるダイアログボックス。}
+    \label{fig:export}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.65\linewidth]{./fig/upload.png}
+    \caption{Overleafへのアップロードアイコン。}
+    \label{fig:upload}
+\end{figure}
+
+
+\bibliography{ipsj_eip_dummy}
+\bibliographystyle{ipsjunsrt_eip}
 
 \end{document}

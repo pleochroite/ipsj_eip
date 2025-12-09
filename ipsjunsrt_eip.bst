@@ -32,9 +32,11 @@ ENTRY
     refdate						% 3.00(1)
     school
     series
+    shorttitle
     title
     type
-    url							% 3.00(1)
+    url
+    urldate% 3.00(1)
     volume
     year
     yomi
@@ -84,6 +86,16 @@ FUNCTION {is.case}
     if$
 }
 
+FUNCTION {is.jlaw}
+{abstract empty$
+    {#0}
+    { abstract "Jlaw" = 
+        {#1}
+        {#0}
+        if$
+    }
+    if$
+}
 
 FUNCTION {output.nonnull}
 { 's :=
@@ -306,7 +318,7 @@ FUNCTION {format.names}					% 1.00(4), 2.00(4)
 	}
         { pop$ is.japanese
             { s nameptr "{ll}{ ff}" format.name$ 't := }
-            { s nameptr "{ff}{vv }{ ll}{, jj}" format.name$ 't := }
+            { s nameptr "{ll}{ vv }{ f}{, jj}" format.name$ 't := }
           if$
         }
       if$
@@ -360,10 +372,10 @@ FUNCTION {format.editors.inparen}			% 2.00(6)
     { editor format.names
       editor num.names$ #1 >
 	{ editor is.kanji
-		{"，編" * } {", eds." *} if$
+		{" 編" * } {", eds." *} if$
 	}
 	{ editor is.kanji
-		{"，編" *}  {", ed." *} if$
+		{" 編" *}  {", ed." *} if$
 	}
       if$
     }
@@ -437,8 +449,10 @@ FUNCTION {format.isodate}
 FUNCTION {format.ref.date}				% 3.00(1)>>
 { before.year 'output.state :=
   is.kanji.title
-    { "\refdatej{" refdate "}" * *}
-    { "\refdatee{" refdate "}" * *}
+    % { "\refdatej{" refdate "}" * *}
+    % { "\refdatee{" refdate "}" * *}
+    { "\refdatej{" urldate "}" * *}
+    { "\refdatee{" urldate "}" * *}
   if$
 }							% 3.00(1)<<
 
@@ -531,8 +545,8 @@ FUNCTION {format.online}				% 3.00(1)>>
 
 FUNCTION {format.url}					% 3.00(1)>>
 { is.kanji.title
-    { "\urlj{" url "}" * * }
-    { "\urle{" url "}" * * }
+    { "\url{" url "}" * * }
+    { "\url{" url "}" * * }
   if$
 }							% 3.00(1)<<
 
@@ -551,13 +565,14 @@ FUNCTION {format.doi.url}				% 3.00(1)>>
 { doi empty$
     { url empty$
 	'skip$
-	{ format.online output.nonnull
-	  format.url
+	{ %format.online output.nonnull
+	   format.url
+      {"\url{" url "}" * *}
 	}
 	if$
     }
-    { format.online output.nonnull
-      "\doi{" doi "}" * *
+    { %format.online output.nonnull
+      "\doi{\url{" doi "}}" * *
     }
   if$							% 3.00(1)<<
 }
@@ -787,14 +802,14 @@ FUNCTION {article}
   crossref missing$
     { journaltitle emphasize output
       format.vol.num.pages output			% 1.00(12)
-      format.date output
+      format.isodate output
     }
     { format.article.crossref output.nonnull
       format.pages.output				% 3.00(1)
+      format.isodate output
     }
   if$
   new.block
-  format.isodate output
   note output
   fin.entry
 }
@@ -818,15 +833,15 @@ FUNCTION {book}
   if$
   add.colon						% 2.00(5)
   title emphasize output
-  crossref missing$
-    { output.series.volume.number
-      publisher output
-      address output
-    }
-    { new.block
-      format.book.crossref output.nonnull
-    }
-  if$
+  % crossref missing$
+  %   { output.series.volume.number
+  %     publisher output
+  %     address output
+  %   }
+  %   { new.block
+  %     format.book.crossref output.nonnull
+  %   }
+  % if$
   publisher output
   format.edition output
   format.isodate output
@@ -853,6 +868,10 @@ FUNCTION {booklet}
   fin.entry
 }
 
+
+FUNCTION {conference} { inproceedings }
+
+
 FUNCTION {inbook}
 { 
 %%%%
@@ -864,8 +883,7 @@ FUNCTION {inbook}
   pages   "pages"
      required.and.or.argument
   publisher  "publisher" required.argument
-  year       "year"      required.argument
-
+  date      "date" required.argument
   optional.series.volume.number.argument
 %%%%
   output.bibitem 
@@ -899,7 +917,7 @@ FUNCTION {incollection}
   title     "title"     required.argument
   booktitle "booktitle" required.argument
   publisher "publisher" required.argument
-  year      "year"      required.argument
+  date      "date"      required.argument
 
   optional.series.volume.number.argument
 %%%%
@@ -912,8 +930,8 @@ FUNCTION {incollection}
       publisher output
       address output
       format.edition output
+      format.isodate output
       format.chapter.pages output			% 1.00(13)
-      format.date output
     }
     { format.incoll.inproc.crossref output.nonnull
       format.chapter.pages output
@@ -956,7 +974,255 @@ FUNCTION {inproceedings}
   fin.entry
 }
 
-FUNCTION {conference} { inproceedings }
+
+FUNCTION {jurisdiction.japan.case.report} {
+    journaltitle empty$
+        { url empty$
+            { "公刊物未登載（" * number * "）" * }
+            { "裁判所等ウェブページ参照（" * number * "）" * }
+        if$}
+        { volume empty$
+            { " （" * journaltitle * pages * "）" * }
+            { " " * journaltitle * volume * "号" * pages * "頁" * }
+            if$
+        }
+    if$
+}
+
+FUNCTION {case.name} {
+    shorttitle empty$
+        'skip$
+        { "（" * shorttitle * "）" * }
+        if$
+}
+
+FUNCTION {jurisdiction.japan} {
+    title "title" required.argument
+    shorttitle "shorttitle" required.argument
+%%%%
+    output.bibitem
+    title output
+    jurisdiction.japan.case.report output
+    case.name output
+    new.block
+    note.output
+    fin.entry
+}
+
+
+FUNCTION {jurisdiction.cjeu}
+{
+    institution "institution" required.argument
+    title   "title"     required.argument
+    number  "number"    required.argument
+    pages   "pages"     required.argument
+    date    "date"      required.argument
+%%%%
+    output.bibitem
+    institution output
+    number output
+    title output
+    format.isodate output
+    pages output
+    case.name output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {jurisdiction.diet.japan}
+{
+    title   "title"     required.argument
+    date    "date"      required.argument
+%%%%
+    output.bibitem
+    title output
+    format.isodate output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {format.case.number}
+{
+    number empty$
+        'skip$
+        { "事件番号: " * number * }
+        if$
+}
+
+FUNCTION {format.case.pages}
+{
+    pages empty$
+        'skip$
+        { ", " * pages * }
+        if$
+}
+
+FUNCTION {jurisdiction.default}
+{
+    title   "title"     required.argument
+    institution "institution" required.argument
+%%%%
+    output.bibitem
+    institution output
+    title output
+    format.isodate output
+    format.case.number output
+    format.case.pages output
+    case.name output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {switch.jurisdiction} {
+    abstract empty$
+        { jurisdiction.default }
+        { abstract "CJEUcase" =
+            { jurisdiction.cjeu }
+            { abstract "Jcase" = 
+                { jurisdiction.japan }
+                { abstract "Jdiet" =
+                    { jurisdiction.diet.japan }
+                    { jurisdiction.default }
+                    if$
+                }
+                if$
+            }
+            if$
+        }
+        if$
+}
+
+FUNCTION {jurisdiction} {
+    switch.jurisdiction
+    %jurisdiction.cjeu
+}
+
+
+FUNCTION {format.legislation.number}
+{ number empty$
+    'skip$
+    { "（" * number * "）" * }
+    if$
+}
+
+FUNCTION {legislation.japan} {
+    title   "title" required.argument
+    number  "number" required.argument
+    date    "date"  required.argument
+%%%%
+    output.bibitem
+    title output
+    format.legislation.number
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {OJ.entry}
+{
+    number empty$
+    'skip$
+    { ", OJ " * format.isodate * " " * number * "/" pages *}
+    if$
+}
+
+FUNCTION {legislation.eu}
+{
+    title "title" required.argument
+    number "number" required.argument
+    date "date" required.argument
+    pages "pages" required.argument
+%%%%
+    output.bibitem
+    title output
+    OJ.entry output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {US.entry}
+{
+    ", " * number * " " * journaltitle * " " * format.isodate *
+}
+
+FUNCTION {legislation.usc}
+{
+    title "title" required.argument
+    % journaltitle "journaltitle" required.argument
+    % journal "journal" required.argument
+    number "number" required.argument
+    date "date" required.argument
+%%%%
+    output.bibitem
+    title output
+    US.entry output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {us.state.entry}
+{
+    ", " * journaltitle * " \S " * pages * " et seq" *
+}
+
+FUNCTION {legislation.usstate}
+{
+    title "title" required.argument
+%%%%
+    output.bibitem
+    title output
+    us.state.entry output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {legislation.default}
+{
+    title "title" required.argument
+    number "number" required.argument
+%%%%
+    output.bibitem
+    title output
+    number output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {switch.legislation}
+{
+    abstract empty$
+    { legislation.default }
+    { abstract "Jlaw" = 
+        {legislation.japan}
+        { abstract "EUlaw" =
+            {legislation.eu}
+            { abstract "USlaw" =
+                {legislation.usc}
+                { abstract "USstatelaw" = 
+                    {legislation.usstate}
+                    {legislation.default}
+                    if$
+                }
+                if$
+            }
+            if$
+        }
+        if$
+    }
+    if$
+}
+
+FUNCTION {legislation} {
+    switch.legislation
+}
+
 
 FUNCTION {manual}
 {	
@@ -984,24 +1250,6 @@ FUNCTION {manual}
   new.block
   note output
   fin.entry
-}
-
-FUNCTION {jurisdiction}
-{
-    institution "institution" required.argument
-    title   "title"     required.argument
-    number  "number"    required.argument
-    pages   "pages"     required.argument
-    date    "date"      required.argument
-
-    output.bibitem
-    institution output
-    number output
-    title output
-    format.isodate output
-    new.block
-    pages output
-    fin.entry
 }
 
 FUNCTION {mastersthesis}
@@ -1049,6 +1297,30 @@ FUNCTION {misc}
   fin.entry
   empty.misc.check
 }
+
+
+FUNCTION {online}					% 3.00(1)>>
+{
+%%%%
+  author       "author"       required.argument
+  title        "title"        required.argument
+  url          "url"          required.argument
+  date          "date"
+  refdate      "refdate"      required.argument
+%%%%
+  output.bibitem
+  author empty$
+    { format.authors }
+    { format.authors add.colon }
+  if$
+  title output
+  format.isodate output
+  format.url output
+  format.ref.date output
+  % new.block
+  note output
+  fin.entry
+}	
 
 FUNCTION {phdthesis}
 {
@@ -1146,6 +1418,7 @@ FUNCTION {unpublished}
   fin.entry
 }
 
+
 FUNCTION {webpage}					% 3.00(1)>>
 {
 %%%%
@@ -1162,7 +1435,7 @@ FUNCTION {webpage}					% 3.00(1)>>
   new.block
   note output
   fin.entry
-}							% 3.00(1)<<
+}	
 
 FUNCTION {default.type} { misc }
 
