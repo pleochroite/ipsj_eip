@@ -1,8 +1,5 @@
-% ipsjunsrt.bst 28-Oct-10 by Hiroshi Nakashima (ver 3.00)
-% ipsjunsrt.bst 15-Jun-07 by Hiroshi Nakashima (ver 2.12)
-% ipsjunsrt.bst 30-Jan-02 by Hiroshi Nakashima (ver 2.00)
-% ipsjunsrt.bst 28-Dec-93 by Hiroshi Nakashima (ver 1.00)
-% jssst.bst tomura@etl.go.jp (Satoru Tomura)
+% ipsjunsrt_eip.bst 10-Dec-25 by Seiichi Igaya (ver 0.01)
+% based on ipsjunsrt.bst 28-Oct-10 by Hiroshi Nakashima (ver 3.00)
 % BibTeX standard bibliography style `jplain'
 	% version 0.10 for JBibTeX versions 0.10 or later, JLaTeX version 2.09.
 	% by Shouichi Matsui, matsui@denken.junet
