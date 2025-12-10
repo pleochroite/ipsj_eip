@@ -29,7 +29,8 @@ ENTRY
     organization
     pages
     publisher
-    refdate						% 3.00(1)
+    refdate		
+    rights% 3.00(1)
     school
     series
     shorttitle
@@ -75,27 +76,6 @@ FUNCTION {is.japanese}
   if$
 }
 
-FUNCTION {is.case}
-{ abstract empty$
-    {#0}
-    { abstract "case" = 
-        {#1}
-        {#0}
-        if$
-    }
-    if$
-}
-
-FUNCTION {is.jlaw}
-{abstract empty$
-    {#0}
-    { abstract "Jlaw" = 
-        {#1}
-        {#0}
-        if$
-    }
-    if$
-}
 
 FUNCTION {output.nonnull}
 { 's :=
@@ -974,6 +954,28 @@ FUNCTION {inproceedings}
   fin.entry
 }
 
+FUNCTION {is.case}
+{ abstract empty$
+    {#0}
+    { abstract "case" = 
+        {#1}
+        {#0}
+        if$
+    }
+    if$
+}
+
+FUNCTION {is.jlaw}
+{abstrac empty$
+    {#0}
+    { abstract "Jlaw" = 
+        {#1}
+        {#0}
+        if$
+    }
+    if$
+}
+
 
 FUNCTION {jurisdiction.japan.case.report} {
     journaltitle empty$
@@ -1079,11 +1081,11 @@ FUNCTION {jurisdiction.default}
 FUNCTION {switch.jurisdiction} {
     abstract empty$
         { jurisdiction.default }
-        { abstract "CJEUcase" =
+        { rights "CJEUcase" =
             { jurisdiction.cjeu }
-            { abstract "Jcase" = 
+            { rights "Jcase" = 
                 { jurisdiction.japan }
-                { abstract "Jdiet" =
+                { rights "Jdiet" =
                     { jurisdiction.diet.japan }
                     { jurisdiction.default }
                     if$
@@ -1199,13 +1201,13 @@ FUNCTION {switch.legislation}
 {
     abstract empty$
     { legislation.default }
-    { abstract "Jlaw" = 
+    { rights "Jlaw" = 
         {legislation.japan}
-        { abstract "EUlaw" =
+        { rights "EUlaw" =
             {legislation.eu}
-            { abstract "USlaw" =
+            { rights "USlaw" =
                 {legislation.usc}
-                { abstract "USstatelaw" = 
+                { rights "USstatelaw" = 
                     {legislation.usstate}
                     {legislation.default}
                     if$

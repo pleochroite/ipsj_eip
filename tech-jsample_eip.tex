@@ -17,6 +17,7 @@
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
 \def\|{\verb|}
 %
+
 %\setcounter{巻数}{59}%vol59=2018
 %\setcounter{号数}{10}
 %\setcounter{page}{1}
@@ -89,11 +90,34 @@ hyperrefパッケージには、hidelinksオプションと、dviからpdfを生
 
 \subsection{文献管理ソフト}
 以下ではZotero (\url{https://www.zotero.org/})の使用を想定して説明します。
+\subsubsection{Zoteroの準備}
 準備として、マイ・ライブラリ下に論文や研究プロジェクトごとにコレクション
 （音楽再生ソフトでの「プレイリスト」のようなもの）を作っておきます。
 左ペインの左上隅にある、フォルダアイコンに$\oplus $が付いているアイコン
 (図\ref{fig:doi}左の「マイ・ライブラリ」の左上にあるもの)を
 クリックするとコレクションを新規作成できます。
+
+\subsubsection{Better BibTexプラグインの設定}
+また、判決や法令など、国ごとに異なる引用形式を扱うため、
+Zoteroの「権利」フィールドに国などの情報を持たせることにしています。
+しかし、インストール直後のZoteroは権利フィールドをエクスポートすることができないので、
+Better BibTexプラグインをインストールした上で
+その設定を行う必要があります。手順は以下の通りです。
+
+\begin{enumerate}
+\item Better BibTeXのページ(\url{https://retorque.re/zotero-better-bibtex/})に
+アクセスして左ペインの下の方にある「Download」をクリック、
+遷移先githubページにある「zotero-better-bibtex-バージョン番号.xpi」をダウンロードします。
+\item ダウンロードできたらZoteroの「ツール→Plugins→右上の歯車→Install Plugin From File...」でダウンロードしたxpiファイルを選択してBetter BibTeXプラグインをZoteroにインストールします。
+\item Zoteroの「環境設定→Better BibTeX→postscript」に以下のテキストを入力。
+    \begin{verbatim}
+    if (Translator.BetterBibLaTeX) {
+      tex.add({ name: 'rights', 
+        value: zotero.rights});
+    }
+    \end{verbatim}
+\end{enumerate}
+これでコレクションをエクスポートしたときにrightsフィールドも含まれるようになったはずです。
 
 \section{文献管理ソフトへの入力}
 
@@ -223,7 +247,7 @@ ISBNから引っ張ってこれる和文書籍の情報はフォーマットが�
 
 \subsection{法}
 アイテムは「法律」を選択します。
-抄録欄への入力内容で引用形式を振り分けています。現在対応している法と抄録への入力内容は、
+権利欄への入力内容で引用形式を振り分けています。現在対応している法と権利への入力内容は、
 \begin{description}
     \item [日本法] Jlaw
     \item [米国連邦法] USlaw
@@ -238,13 +262,13 @@ ISBNから引っ張ってこれる和文書籍の情報はフォーマットが�
     \item 法令名
     \item 法律番号
     \item 言語はjaと入力
-    \item 抄録にJlawと入力
+    \item 権利にJlawと入力
 \end{itemize}
 \cite{appi2003}のように引用されます。
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.85\linewidth]{./fig/Jlaw.png}
+    \includegraphics[width=0.85\linewidth]{./fig/law_J.png}
     \caption{日本法(個人情報保護法)の入力例。}
     \label{fig:jlaw}
 \end{figure}
@@ -257,14 +281,14 @@ ISBNから引っ張ってこれる和文書籍の情報はフォーマットが�
     \item コード (United States CodeならU.S.C.など)
     \item 法律番号
     \item 施行期日 (法典の版)
-    \item 抄録にUSlawと入力
+    \item 権利にUSlawと入力
 \end{itemize}
 
 \cite{CopyrightAct19762012}のように引用されます。
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.85\linewidth]{./fig/USlaw.png}
+    \includegraphics[width=0.85\linewidth]{./fig/law_US.png}
     \caption{米国連邦法(著作権法)の入力例。}
     \label{fig:uslaw}
 \end{figure}
@@ -276,13 +300,13 @@ ISBNから引っ張ってこれる和文書籍の情報はフォーマットが�
     \item コード
     \item 施行期日
     \item ページ数 (冒頭のセクション番号)
-    \item 抄録にUSstatelawと入力
+    \item 権利にUSstatelawと入力
 \end{itemize}
 \cite{ccpa2018}のように引用されます。
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.85\linewidth]{./fig/USstatelaw.png}
+    \includegraphics[width=0.85\linewidth]{./fig/law_USstate.png}
     \caption{米国州法(CCPA)の入力例。}
     \label{fig:usstatelaw}
 \end{figure}
@@ -295,29 +319,29 @@ ISBNから引っ張ってこれる和文書籍の情報はフォーマットが�
     \item 法律番号 (EU官報の巻号)
     \item 施行期日 (EU官報の日付)
     \item ページ数 (EU官報の最初の頁)
-    \item 抄録にEUlawを入力
+    \item 権利にEUlawを入力
 \end{itemize}
 \cite{gdpr2016}のように引用されます。
 EU官報の情報がない場合には、法律番号を空欄にすればスキップされます。
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.85\linewidth]{./fig/EUlaw.png}
+    \includegraphics[width=0.85\linewidth]{./fig/law_EU.png}
     \caption{EU法(GDPR)の入力例。}
     \label{fig:eulaw}
 \end{figure}
 
 \subsubsection{その他の国・地域の法}
 
-抄録に上記以外の値を入力（大文字・小文字違いや空欄を含む）すると(図\ref{fig:prclaw})、
+権利に上記以外の値を入力（大文字・小文字違いや空欄を含む）すると(図\ref{fig:prclaw})、
 デフォルトの引用形式
 \cite{pipl2021}
 が出力されます。
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.85\linewidth]{./fig/PRClaw.png}
-    \caption{その他国・地域の法(中華人民共和国個人情報保護法)の入力例。抄録に入力された「PRClaw」は無視され、
+    \includegraphics[width=0.85\linewidth]{./fig/law_PRC.png}
+    \caption{その他国・地域の法(中華人民共和国個人情報保護法)の入力例。権利に入力された「PRClaw」は無視され、
     デフォルトの引用形式で出力される。}
     \label{fig:prclaw}
 \end{figure}
@@ -326,7 +350,7 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
 \subsection{判決など}
 
 アイテムを「訴訟」にします。
-抄録やレポーター、リポーター巻への入力内容で引用形式を振り分けています。
+権利やレポーター、リポーター巻への入力内容で引用形式を振り分けています。
 
 \subsubsection{日本の判決や審決}
 公刊物に登載されている判決や審決の場合、図\ref{fig:case_japan_reported}のように入力すると、
@@ -338,7 +362,7 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
     \item レポーター (掲載誌名)
     \item リポーター巻（掲載誌の号）
     \item 最初のページ（掲載誌の最初のページ）
-    \item 抄録に「Jcase」
+    \item 権利に「Jcase」
 \end{itemize}
 また、読者の便宜のために事件の通称を付したい場合は、「題名(略)」に入力します。
 事件整理番号に事件番号を入れても構いません。
@@ -357,7 +381,7 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
     \item 事件名（裁判所名称 裁判形式 判決年月日までを記入）
     \item 決定期日（西暦で入力。文献ソフトでの管理用です）
     \item 事件整理番号
-    \item 抄録に「Jcase」
+    \item 権利に「Jcase」
 \end{itemize}
 また、読者の便宜のために事件の通称を付したい場合は、「題名(略)」に入力します。
 なお、公刊物には掲載されていないが裁判所等のウェブページで閲覧できる場合にはURLを入力しておくと
@@ -376,7 +400,7 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
     \item 決定期日（西暦で入力。文献ソフトでの管理用です）
     \item レポーター(DB名称)
     \item 最初のページ(文献版号)
-    \item 抄録に「Jcase」
+    \item 権利に「Jcase」
 \end{itemize}
 とすることもできます(図\ref{fig:case_japan_db})。
 これにより\cite{vtuber2020}のように引用されます。
@@ -397,19 +421,19 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
     \item 決定期日
     \item 事件整理番号
     \item 最初のページに欧州判例法識別子(ECLI)
-    \item 抄録に「CJEUcase」
+    \item 権利に「CJEUcase」
 \end{itemize}
 です。
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.85\linewidth]{./fig/caseCJEU.png}
+    \includegraphics[width=0.85\linewidth]{./fig/case_CJEU.png}
     \caption{欧州司法裁判所判決の入力例。}
     \label{fig:case_cjeu}
 \end{figure}
 
 \subsubsection{その他の国・地域の判決}
-抄録に「Jcase」「EUcase」「Jdiet（\ref{ssec:jdiet}節参照）」以外の文字列（大文字・小文字違いや空欄も含む）を入力すると
+権利に「Jcase」「EUcase」「Jdiet（\ref{ssec:jdiet}節参照）」以外の文字列（大文字・小文字違いや空欄も含む）を入力すると
 （図\ref{fig:case_other}）、jurisdictionのデフォルトの引用形式として
 \cite{conseildetatBodyTemp2020}のように出力されます。
 必須のフィールドは
@@ -423,7 +447,7 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
 \begin{figure}
     \centering
     \includegraphics[width=0.85\linewidth]{./fig/case_other.png}
-    \caption{その他の国・地域判決の入力例。抄録に入力された「Francecase」は無視され、
+    \caption{その他の国・地域判決の入力例。権利に入力された「Francecase」は無視され、
     デフォルトの引用形式で出力される。}
     \label{fig:case_other}
 \end{figure}
@@ -431,7 +455,7 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
 
 \subsection{国会議事録}
 \label{ssec:jdiet}
-アイテムは「公聴会」を選択した上で、「抄録」にJdietという文字列を入力してください。
+アイテムは「公聴会」を選択した上で、「権利」にJdietという文字列を入力してください。
 内部的には「訴訟」と同じくjurisdictionになってしまいます。
 必須のフィールドは
 \begin{itemize}
@@ -439,9 +463,9 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
     \item 立法機関
     \item 出版年月日(委員会開催日)
     \item 言語
-    \item 抄録に「Jdiet」
+    \item 権利に「Jdiet」
 \end{itemize}
-です(図\ref{fig:diet_j})。これによって\cite{Dai156Kai2003o}のように出力されます。
+です(図\ref{fig:diet_j})。これによって\cite{sangi156appi8}のように出力されます。
 
 \begin{figure}
     \centering
@@ -488,6 +512,7 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
 
 
 \section{コレクションのエクスポートとOverleafへの取り込み}
+\label{sec:export}
 コレクションを右クリックして「コレクションをエクスポート...」を選択すると
 図\ref{fig:export}のダイアログボックスが表示されます。
 フォーマットを「Better BibLaTeX」に、
