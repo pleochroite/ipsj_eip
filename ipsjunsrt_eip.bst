@@ -14,6 +14,7 @@ ENTRY
     doi							% 3.00(1)
     edition
     editor
+    entrysubtype
     howpublished
     institution
     journal
@@ -995,7 +996,23 @@ FUNCTION {case.name} {
         if$
 }
 
-FUNCTION {jurisdiction.japan} {
+FUNCTION {format.case.number}
+{
+    number empty$
+        'skip$
+        { ", 事件番号: " * number * }
+        if$
+}
+
+FUNCTION {format.case.pages}
+{
+    pages empty$
+        'skip$
+        { ", " * pages * }
+        if$
+}
+
+FUNCTION {jurisdiction.case.japan} {
     title "title" required.argument
     shorttitle "shorttitle" required.argument
 %%%%
@@ -1009,7 +1026,7 @@ FUNCTION {jurisdiction.japan} {
 }
 
 
-FUNCTION {jurisdiction.cjeu}
+FUNCTION {jurisdiction.case.cjeu}
 {
     institution "institution" required.argument
     title   "title"     required.argument
@@ -1029,6 +1046,24 @@ FUNCTION {jurisdiction.cjeu}
     fin.entry
 }
 
+FUNCTION {jurisdiction.case.default}
+{
+    institution "institution" required.argument
+    title   "title"     required.argument
+    pages   "pages"     required.argument
+    date    "date"      required.argument
+%%%%
+    output.bibitem
+    institution output
+    title output
+    format.case.number output
+    format.case.pages output
+    case.name output
+    new.block
+    note.output
+    fin.entry
+}
+
 FUNCTION {jurisdiction.diet.japan}
 {
     title   "title"     required.argument
@@ -1040,22 +1075,6 @@ FUNCTION {jurisdiction.diet.japan}
     new.block
     note.output
     fin.entry
-}
-
-FUNCTION {format.case.number}
-{
-    number empty$
-        'skip$
-        { "事件番号: " * number * }
-        if$
-}
-
-FUNCTION {format.case.pages}
-{
-    pages empty$
-        'skip$
-        { ", " * pages * }
-        if$
 }
 
 FUNCTION {jurisdiction.default}
@@ -1075,28 +1094,40 @@ FUNCTION {jurisdiction.default}
     fin.entry
 }
 
-FUNCTION {switch.jurisdiction} {
-    abstract empty$
-        { jurisdiction.default }
-        { rights "CJEUcase" =
-            { jurisdiction.cjeu }
-            { rights "Jcase" = 
-                { jurisdiction.japan }
-                { rights "Jdiet" =
-                    { jurisdiction.diet.japan }
-                    { jurisdiction.default }
-                    if$
-                }
-                if$
-            }
+FUNCTION {switch.case} {
+    entrysubtype "Jcase" =
+        { jurisdiction.case.japan }
+        { entrysubtype "CJEUcase" = 
+            { jurisdiction.case.cjeu }
+            { jurisdiction.case.default}
             if$
         }
         if$
 }
 
+FUNCTION {switch.diet} {
+    entrysubtype "Jdiet" = 
+        { jurisdiction.diet.japan }
+        { jurisdiction.diet.default}
+        if$
+}
+
+
+FUNCTION {switch.jurisdiction} {
+    type "case" = 
+        { switch.case }
+        { type "diet" =
+            { switch.diet }
+            { jurisdiction.default}
+            if$
+        }
+    if$
+}
+
+
+
 FUNCTION {jurisdiction} {
     switch.jurisdiction
-    %jurisdiction.cjeu
 }
 
 
@@ -1109,7 +1140,6 @@ FUNCTION {format.legislation.number}
 
 FUNCTION {legislation.japan} {
     title   "title" required.argument
-    number  "number" required.argument
     date    "date"  required.argument
 %%%%
     output.bibitem
@@ -1196,7 +1226,7 @@ FUNCTION {legislation.default}
 
 FUNCTION {switch.legislation}
 {
-    abstract empty$
+    rights empty$
     { legislation.default }
     { rights "Jlaw" = 
         {legislation.japan}
