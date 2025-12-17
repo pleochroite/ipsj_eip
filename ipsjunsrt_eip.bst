@@ -1226,15 +1226,15 @@ FUNCTION {legislation.default}
 
 FUNCTION {switch.legislation}
 {
-    rights empty$
+    entrysubtype empty$
     { legislation.default }
-    { rights "Jlaw" = 
+    { entrysubtype "Jlaw" = 
         {legislation.japan}
-        { rights "EUlaw" =
+        { entrysubtype "EUlaw" =
             {legislation.eu}
-            { rights "USlaw" =
+            { entrysubtype "USlaw" =
                 {legislation.usc}
-                { rights "USstatelaw" = 
+                { entrysubtype "USstatelaw" = 
                     {legislation.usstate}
                     {legislation.default}
                     if$
