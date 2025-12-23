@@ -1,6 +1,6 @@
-# 情報処理学会EIP研究会用LaTeXスタイルファイル
+# 情報処理学会EIP研究会用BibTeXスタイルファイル
 ## これはなに?
- 情報処理学会が研究報告用に提供している[LaTeXスタイルファイル](https://www.ipsj.or.jp/journal/submit/style.html)を電子化知的財産・社会基盤(EIP)研究会向けに拡張したスタイルファイルです。
+ 情報処理学会が研究報告用に提供している[BibTeXスタイルファイル](https://www.ipsj.or.jp/journal/submit/style.html)を電子化知的財産・社会基盤(EIP)研究会向けに拡張したスタイルファイルです。
  EIP研究会で引用することが多い、法令(文献タイプ: legislation)や判例及び公聴会議事録(文献タイプ: jurisdiction)を処理できるようbstファイルに関数を追加して作成しました。
  
 ## 使い方
