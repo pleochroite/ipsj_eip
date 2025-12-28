@@ -4,7 +4,7 @@
 	% version 0.10 for JBibTeX versions 0.10 or later, JLaTeX version 2.09.
 	% by Shouichi Matsui, matsui@denken.junet
 
-ENTRY
+  ENTRY
   { abstract
     address
     author
@@ -1064,7 +1064,20 @@ FUNCTION {jurisdiction.case.default}
     fin.entry
 }
 
-FUNCTION {jurisdiction.diet.japan}
+FUNCTION {jurisdiction.parliament.japan}
+{
+    title   "title"     required.argument
+    date    "date"      required.argument
+%%%%
+    output.bibitem
+    title output
+    format.isodate output
+    new.block
+    note.output
+    fin.entry
+}
+
+FUNCTION {jurisdiction.parliament.default}
 {
     title   "title"     required.argument
     date    "date"      required.argument
@@ -1105,10 +1118,10 @@ FUNCTION {switch.case} {
         if$
 }
 
-FUNCTION {switch.diet} {
-    entrysubtype "Jdiet" = 
-        { jurisdiction.diet.japan }
-        { jurisdiction.diet.default}
+FUNCTION {switch.parliament} {
+    entrysubtype "Japan" = 
+        { jurisdiction.parliament.japan }
+        { jurisdiction.parliament.default}
         if$
 }
 
@@ -1116,8 +1129,8 @@ FUNCTION {switch.diet} {
 FUNCTION {switch.jurisdiction} {
     type "case" = 
         { switch.case }
-        { type "diet" =
-            { switch.diet }
+        { type "parliament" =
+            { switch.parliament }
             { jurisdiction.default}
             if$
         }
