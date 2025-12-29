@@ -460,7 +460,12 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
 
 \subsection{国会議事録}
 \label{ssec:jdiet}
-アイテムは「公聴会」を選択した上で、「権利」にJdietという文字列を入力してください。
+アイテムは「公聴会」を選択した上で、「歴史」に``parliament''と入力します。
+「権利」フィールドの値で振り分けをしていますが、現状は日本(Japan)か否かしか見ておらず、
+しかもいずれの場合でも出力形式は同じです。
+ですが、今後対応する国・地域を増やす可能性があるため、現時点から「権利」には国・地域名を入力しておくことをおすすめします。
+
+日本の国会議事録の場合は、「権利」に``Japan''という文字列を入力してください。
 内部的には「訴訟」と同じくjurisdictionになってしまいます。
 必須のフィールドは
 \begin{itemize}
@@ -468,8 +473,8 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
     \item 立法機関
     \item 出版年月日(委員会開催日)
     \item 言語
-    \item 歴史に「diet」
-    \item 権利に「Jdiet」
+    \item 歴史に「parliament」
+    \item 権利に「Japan」
 \end{itemize}
 です(図\ref{fig:diet_j})。これによって\cite{sangi156appi8}のように出力されます。
 
@@ -479,6 +484,31 @@ EU官報の情報がない場合には、法律番号を空欄にすればスキ
     \caption{国会議事録の入力例。}
     \label{fig:diet_j}
 \end{figure}
+
+\subsection{ソフトウェア}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{./fig/software.png}
+    \caption{ソフトウェアの入力例。}
+    \label{fig:software}
+\end{figure}
+
+アイテムは「ソフトウェア」を選択します。
+必須フィールドは
+\begin{itemize}
+    \item プログラマー
+    \item 題名
+\end{itemize}
+で、これ以外に
+\begin{itemize}
+    \item バージョン
+    \item 出版年月日
+    \item URL
+\end{itemize}
+を入力することができ(図\ref{fig:software})、
+\cite{ditigalScholarZotero2024}のように出力されます。
+
 
 \subsection{ウェブページ}
 アイテム名を「ウェブページ」にします。

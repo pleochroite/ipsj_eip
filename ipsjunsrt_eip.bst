@@ -1,5 +1,8 @@
-% ipsjunsrt_eip.bst 10-Dec-25 by Seiichi Igaya (ver 0.01)
-% based on ipsjunsrt.bst 28-Oct-10 by Hiroshi Nakashima (ver 3.00)
+% ipsjunsrt.bst 28-Oct-10 by Hiroshi Nakashima (ver 3.00)
+% ipsjunsrt.bst 15-Jun-07 by Hiroshi Nakashima (ver 2.12)
+% ipsjunsrt.bst 30-Jan-02 by Hiroshi Nakashima (ver 2.00)
+% ipsjunsrt.bst 28-Dec-93 by Hiroshi Nakashima (ver 1.00)
+% jssst.bst tomura@etl.go.jp (Satoru Tomura)
 % BibTeX standard bibliography style `jplain'
 	% version 0.10 for JBibTeX versions 0.10 or later, JLaTeX version 2.09.
 	% by Shouichi Matsui, matsui@denken.junet
@@ -36,6 +39,7 @@
     type
     url
     urldate% 3.00(1)
+    version
     volume
     year
     yomi
@@ -1424,6 +1428,31 @@ FUNCTION {proceedings}
   fin.entry
 }
 
+FUNCTION {software.version}
+{
+    version empty$
+        'skip$
+        { ", version " * version * ", " * }
+    if$
+}
+
+FUNCTION {software} {
+%%%%
+    author "author" required.argument
+    title "title" required.argument
+%%%%
+    output.bibitem
+    format.authors
+    add.colon
+    title output
+    software.version output
+    format.isodate output
+    format.url output
+    new.block
+    note output
+    fin.entry
+}
+
 FUNCTION {techreport}
 {
 %%%%
@@ -1443,6 +1472,8 @@ FUNCTION {techreport}
   note output
   fin.entry
 }
+
+FUNCTION {thesis} { phdthesis }
 
 FUNCTION {unpublished}
 {
